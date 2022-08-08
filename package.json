@@ -1,0 +1,28 @@
+{
+  "name": "02_weekly",
+  "version": "1.0.0",
+  "description": "## Note Taking application (With white-listed users)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "express": "^4.18.1",
+    "express-basic-auth": "^1.2.1",
+    "express-handlebars": "^6.0.6",
+    "install": "^0.13.0",
+    "npm": "^8.15.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XccelerateOrg/FTWD_Node_Weekly_02.git"
+  },
+  "bugs": {
+    "url": "https://github.com/XccelerateOrg/FTWD_Node_Weekly_02/issues"
+  },
+  "homepage": "https://github.com/XccelerateOrg/FTWD_Node_Weekly_02#readme"
+}
