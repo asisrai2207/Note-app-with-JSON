@@ -1,18 +1,11 @@
-/**********************************************
- * Routing for the NoteApplication
- * ==================================
- ***********************************************/
-// Setup a NoteRouter class which takes the note service as a dependency, that was we can inject the NoteService when we use our Router. As this is not a hard coded value we will need to inject the noteService for every instance of the note router.
 class NoteRouter {
   constructor(noteService, express) {
     this.noteService = noteService;
     this.express = express;
   }
-  // This utilises the express Router method, basically we are binding the path/ request to each restful verb
+  
   router() {
     let router = this.express.Router();
-    // bind the different methods (if not using arrow function, should bind the method to the class)
-    // e.g., router.get("/", this.get.bind(this));
     router.get("/", this.get.bind(this));   //With the bind() method, an object can borrow a method from another object
     router.post("/", this.post.bind(this));
     router.put("/:id", this.put.bind(this));
@@ -20,17 +13,10 @@ class NoteRouter {
     return router;
   }
 
-  /** # GET Method   #
-/*  ====================== */
-  //   1) Create a get method
-  //   when the route is "/"
-  //   Here we handle what will occur when we have been sent down a particular path, this path is '/' - we will just list all of the notes, that match our(req.auth.user)
   get(req, res) {
     let user = req.auth.user; //gives you username and password after verifying 
     return (
       this.noteService
-        // list out all the notes from the user
-        // What we do with the information that we receive, here we send the notes back in JSON format.
         .list(user)
         .then((notes) => {
           console.log(notes);
@@ -44,9 +30,6 @@ class NoteRouter {
     );
   }
 
-  /** # Post Method   #
-/*  ====================== */
-  // 2) Create a post method
   post(req, res) {
     let note = req.body.note;
     let user = req.auth.user;
@@ -69,10 +52,6 @@ class NoteRouter {
     );
   }
 
-  /** # PUT Method   #
-  /*  ====================== */
-  // 3) Create a put method, which updates our json file
-  // Here we handle our put request, which has an id as a parameter (req.params.id), the body of the updated note (req.body.note) and the user who's note we want to update (req.auth.user)
   put(req, res) {
     let id = req.params.id;
     let note = req.body.note;
@@ -96,9 +75,6 @@ class NoteRouter {
         })
     );
   }
-  /** # DELETE Method   #
-  /*  ====================== */
-  // 4) Create a delete method
 
   delete(req, res) {
     let id = req.params.id;
