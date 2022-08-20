@@ -2,101 +2,37 @@
 const res = require("express/lib/response");
 
 class NoteService {
-  constructor(file, fs) {
-    this.file = file;
-    this.fs = fs;
-    this.init(); // Call the init() method.
-    this.notes = {};
-  }
-
-
-  init() {
-    new Promise((resolve, reject) => {
-      this.read().then((notes)=>{
-        this.notes = notes;
-        resolve();
-      })
-    });
-  }
-
-  read() {
-    return new Promise((resolve, reject) => {
-      this.fs.readFile(this.file, "utf-8", (err,data)=>{
-        if(err){
-          reject(err)
-        }else {
-          // this.notes = JSON.parse(data)
-          // return resolve(this.notes)
-          resolve(JSON.parse(data));
-        }
-      })
-    });
-  }
-
-  write() {
-    return new Promise((resolve, reject) => {
-      this.fs.writeFile(this.file,JSON.stringify(this.notes),(err)=>{
-        if(err){
-          return reject(err);
-          
-        } else {
-         resolve();
-        }
-
-      })
-    });
+  constructor(knex) {
+   this.knex = knex;
   }
 
   list(user) {
-    // call the readfile method
-    return this.read().then(() => {
-      if(typeof this.notes[user] === "undefined"){
-        return []; //if a user does not have a note than it will return empty array
-      } else {
-        return this.notes[user];    
-      }
-
-    });
+    return this.knex("users")
+    .select("notes.content", "notes.id")
+    .join("notes", "users.id", "notes.user_id")
+    .where("username", user)
+    .orderBy("notes.id", "asc");
   }
 
   add(note, user) {
-    console.log("ADD METHOD");
-    console.log("Note: " + note);
-    console.log("User: " + user);
-    if (typeof this.notes[user] === "undefined"){
-      this.notes[user]= [];
-    }this.notes[user].push(note);
-    return this.write();
+   return this.knex("users")
+   .select("id")
+   .where("username", user)
+   .first()
+   .then((data)=>{
+     return this.knex("notes").insert({user_id: data.id, content: note});
+   });
 
   }
 
 
-  update(index, note, user) {
-    // if there is no user throw an error
-    // if note does not exist throw an error
-    if(typeof this.notes[user] === "undefined"){
-      throw new Error("Cannot update a note, if the user doesnt exist")
-    };
-    if(this.notes[user].length <= index){
-      throw new Error("Cannot update a note that doesnt exist");
-    }
-    this.notes[user][index] = note;
-    return this.write();
+  update(id, note, user) {
+ return this.knex("notes").update({content: note}).where({id : id});
   }
 
  
-  remove(index, user) {
-    // if there is no user throw an error
-    if(typeof this.notes[user] === "undefined"){
-      throw new Error("Cannot delete a note, if the user doesnt exist")
-    };
-    if(this.notes[user].length <= index){
-      throw new Error("Cannot delete a note that doesnt exist");
-    }
-      this.notes[user].splice(index,1);
-      console.log("Note is deleted")
-      return this.write();
-    }
+  remove(id, note) {
+    return this.knex("notes").delete().where({id : id});
   }
-
+}
 module.exports = NoteService;

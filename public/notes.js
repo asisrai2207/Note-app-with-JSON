@@ -2,9 +2,9 @@ var notesTemplate = Handlebars.compile(
   `
   {{#each notes}}
   <div class="note">
-      <span class="input"><textarea id={{@index}}>{{this}}</textarea></span>
+      <span class="input"><textarea id={{id}}>{{content}}</textarea></span>
 
-      <button class="remove btn btn-xs" id={{@index}}><i class="fa fa-trash" aria-hidden="true"></i></button>
+      <button class="remove btn btn-xs" id={{id}}><i class="fa fa-trash" aria-hidden="true"></i></button>
   </div>
   {{/each}}
         `

@@ -1,9 +1,11 @@
-const AuthChallenger = (users) => {
-  // This will return True or False
-  console.log(users);
-  return (username, password) => {
-    return users[username]!== undefined && users[username]===password
-  };
+// Declare the function Auth Challenger that takes in one parameter, the users
+
+const AuthChallenger = (knex) => {
+  return async (username, password) => {
+    const data = await knex("users").where({username, password}).first();
+    return data ? true : false; //if true return data
+  }
+
 };
 // This code exports the function we hae just defined.
 module.exports = AuthChallenger;
